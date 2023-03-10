@@ -50,18 +50,19 @@ async def on_ready():
  
 @client.event
 async def on_message(message):
-    global fullAccess
     if message.author == client.user:
         return 
     if message.author.bot :
-        return
- 
+        return 
     
     if message.content.startswith('/prompt'):
-        await message.channel.send("Seulement Martin peut me demander des choses")
-    else:
         ss = message.content.replace('/prompt', '')
-
+        
+        generateSpeech = False
+        if m.find("--speech") > 0:
+            ss = ss.replace("--speech", '')
+            generateSpeech = True
+        
         completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": ss}])
             
         chaine = completion['choices'][0]['message']['content']
@@ -71,14 +72,11 @@ async def on_message(message):
             m = chaine[i:mx]    
             await message.channel.send(m)
             
-        if m.find("-speech") > 0:
+        if generateSpeech:
             if os.path.exists("./temp/speech.wav"):
                 os.remove("./temp/speech.wav")
 
-            if m.find("-speechFR"):
-                subprocess.call("mimic3 --voice fr_FR/tom_low \"" + chaine  + "\" > ./temp/speech.wav", shell=True)
-            else:
-                subprocess.call("mimic3 --voice en_UK/apope_low \"" + chaine + "\" > ./temp/speech.wav", shell=True)
+            subprocess.call("mimic3 --voice en_UK/apope_low \"" + chaine + "\" > ./temp/speech.wav", shell=True)
 
             subprocess.call("ffmpeg -y -i ./temp/speech.wav -vn -ar 44100 -ac 2 -b:a 128k ./temp/speech.mp3", shell=True)
             await message.channel.send(file = discord.File("./temp/speech.mp3") )
