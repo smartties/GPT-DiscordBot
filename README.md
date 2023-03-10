@@ -22,5 +22,9 @@ Transcribe a youtube video into text
 
 ``` /transcript https://www.youtube.com/watch?v=dQw4w9WgXcQ ```
 
+generate an image from a prompt
+
+``` /imagine A bear flying in the sky ```
+
 ## Licence
 AGPL v3 license
