@@ -14,7 +14,7 @@ Generate a story
 
 ``` /prompt Tell me a story about ```
 
-Generate a story, and also send
+Generate a story, and also send the generated speech
 
 ``` /prompt Tell me a story about --speech ```
 
